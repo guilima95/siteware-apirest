@@ -14,7 +14,7 @@ namespace Siteware.Infra.Map
             builder.ToTable("Product");
             builder.HasKey(product => product.Id).HasName("Id");
             builder.Property(product => product.Id).HasColumnName("Id").IsRequired();
-            builder.Property(product => product.Name).HasColumnName("Name").IsRequired().HasColumnType("varchar");
+            builder.Property(product => product.Name).HasColumnName("Name").IsRequired();
             builder.Property(product => product.Price).HasColumnName("Price").IsRequired().HasColumnType("decimal");
         }
     }

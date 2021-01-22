@@ -8,13 +8,12 @@ namespace Siteware.Infra.SqlServer.EF
     {
         public SitewareDbContext(DbContextOptions options) : base(options) { }
 
-        public DbSet<Product> Products { get; set; }
-        public DbSet<Promotion> Promotions { get; set; }
-        public DbSet<User> Users { get; set; }
+        public DbSet<Product> Product { get; set; }
+        public DbSet<Promotion> Promotion { get; set; }
+        public DbSet<User> User { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            Database.EnsureCreated();
             modelBuilder.ApplyConfiguration(new ProductMap());
             modelBuilder.ApplyConfiguration(new PromotionMap());
             modelBuilder.ApplyConfiguration(new UserMap());
@@ -22,10 +21,6 @@ namespace Siteware.Infra.SqlServer.EF
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-                optionsBuilder.UseSqlServer(GetStringConnectionConfig());
-
-
             base.OnConfiguring(optionsBuilder);
         }
 

@@ -8,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Siteware.API.Filters;
 using Siteware.Infra.Jwt;
 using Siteware.Ioc;
 using System;
@@ -34,9 +36,17 @@ namespace Siteware.API
             ConfigureAuth(services);
 
             // IoC
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            new ConfigureIoc(services, Configuration).InjectorDependency();
 
             // Swagger
+            ConfigureSwagger(services);
 
+            //Filters
+            services.AddMvc(setup =>
+            {
+                setup.Filters.Add(typeof(ReturnDefaultApiFilter));
+            });
 
         }
 
@@ -65,6 +75,45 @@ namespace Siteware.API
             });
         }
 
+        public void ConfigureSwagger(IServiceCollection services)
+        {
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "Siteware API",
+                    Description = "A simple project ASP.NET Core Web API",
+                    TermsOfService = new Uri("https://example.com/terms"),
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Guilherme Lima",
+                        Email = "guilhermelucas.contato@gmail.com",
+                        Url = new Uri("https://twitter.com/guiplima95"),
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "Use under SITEWARE",
+                        Url = new Uri("https://example.com/license"),
+                    }
+                });
+
+
+                c.EnableAnnotations();
+                c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme { In = Microsoft.OpenApi.Models.ParameterLocation.Header, Description = "Please enter JWT Bearer info field", Name = "Authorization", Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey });
+                c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer"}
+                        },
+                        new string[]{ }
+                    }
+                });
+            });
+        }
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -90,6 +139,11 @@ namespace Siteware.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("v1/swagger.json", "Siteware Projeto");
             });
         }
     }

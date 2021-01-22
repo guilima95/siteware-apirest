@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Siteware.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/user")]
     [ApiController]
     public class UserController : MainController
     {
@@ -27,16 +27,15 @@ namespace Siteware.API.Controllers
 
             // Verifica se o usuário existe
             if (user == null)
-                NotFound("User not found.");
+                return NotFound("User not found.");
 
-            model.Id = user.Id;
             model.Username = user.Name;
 
             // Gera o Token
             var token = GenerateToken.GetToken(model);
 
             // Oculta a senha
-            model.Password = "";
+            //model.Password = "";
 
             // Retorna os dados
             return new

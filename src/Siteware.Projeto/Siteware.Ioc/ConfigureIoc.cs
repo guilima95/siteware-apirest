@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Siteware.Application;
@@ -33,6 +34,11 @@ namespace Siteware.Ioc
 
         public void DateBase()
         {
+            //EF Context
+            services.AddDbContext<SitewareDbContext>(
+                  options => options.UseSqlServer(
+                      configuration.GetValue<string>("Database:DefaultConnection")));
+
             services.AddScoped<IDbConnection>(p => p.GetService<SitewareDbContext>().Database.GetDbConnection());
         }
 
@@ -43,6 +49,12 @@ namespace Siteware.Ioc
 
         public void DomainServices()
         {
+            //EF Context
+            services.AddDbContext<SitewareDbContext>(
+                  options => options.UseSqlServer(
+                      configuration.GetValue<string>("Database:DefaultConnection")));
+
+
             services.AddScoped<INotifierService, NotifierService>();
             services.AddScoped<INotifier, Notifier>();
         }
