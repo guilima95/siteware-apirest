@@ -1,9 +1,11 @@
-﻿namespace Siteware.Domain.Repositories.Transaction
+﻿using System;
+using System.Threading.Tasks;
+
+namespace Siteware.Domain.Repositories.Transaction
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork : IDisposable
     {
-        void BeginTransaction();
-        void Commit();
-        void Rollback();
+     
+        Task<bool> Commit();
     }
 }

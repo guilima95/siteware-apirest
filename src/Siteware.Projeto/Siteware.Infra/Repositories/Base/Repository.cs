@@ -11,45 +11,21 @@ using System.Threading.Tasks;
 
 namespace Siteware.Infra.Repositories.Base
 {
-    public abstract class Repository<TEntity> : IRepository<TEntity>, IDisposable where TEntity : class
+    public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
-        protected readonly SitewareDbContext context;
-        protected readonly DbSet<TEntity> DbSet;
+        private readonly SitewareDbContext context;
+        private readonly DbSet<TEntity> DbSet;
         public Repository(SitewareDbContext context)
         {
             this.context = context;
             this.DbSet = context.Set<TEntity>();
         }
 
-        #region Disposed https://docs.microsoft.com/pt-br/dotnet/standard/garbage-collection/implementing-dispose
 
-        // To detect redundant calls
-        private bool _disposed = false;
-
-        // Instantiate a SafeHandle instance.
-        private SafeHandle _safeHandle = new SafeFileHandle(IntPtr.Zero, true);
-
-        // Public implementation of Dispose pattern callable by consumers.
-        public void Dispose() => Dispose(true);
-        protected virtual void Dispose(bool disposing)
-        {
-            if (_disposed)
-            {
-                return;
-            }
-
-            if (disposing)
-            {
-                // Dispose managed state (managed objects).
-                _safeHandle?.Dispose();
-            }
-
-            _disposed = true;
-        }
 
         public async Task Insert(TEntity Entity)
         {
-            await DbSet.AddAsync(Entity);
+            await context.Set<TEntity>().AddAsync(Entity);
         }
 
         public async Task Update(TEntity Entity)
@@ -81,6 +57,10 @@ namespace Siteware.Infra.Repositories.Base
         {
             return await DbSet.AsNoTracking().Where(predicate).ToListAsync();
         }
-        #endregion
+
+        public IEnumerable<TEntity> GetAll()
+        {
+            return context.Set<TEntity>();
+        }
     }
 }

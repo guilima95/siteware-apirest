@@ -8,7 +8,11 @@ using Siteware.Domain.Concrete.Notification;
 using Siteware.Domain.Notification;
 using Siteware.Domain.Notification.Contracts;
 using Siteware.Domain.Repositories;
+using Siteware.Domain.Repositories.Transaction;
+using Siteware.Domain.Services;
+using Siteware.Domain.Services.Contracts;
 using Siteware.Infra.Repositories;
+using Siteware.Infra.Repositories.Transaction;
 using Siteware.Infra.SqlServer.EF;
 using System.Data;
 
@@ -38,13 +42,14 @@ namespace Siteware.Ioc
             services.AddDbContext<SitewareDbContext>(
                   options => options.UseSqlServer(
                       configuration.GetValue<string>("Database:DefaultConnection")));
-
-            services.AddScoped<IDbConnection>(p => p.GetService<SitewareDbContext>().Database.GetDbConnection());
         }
 
         public void AppServices()
         {
             services.AddScoped<IUserAppService, UserAppService>();
+            services.AddScoped<IProductAppService, ProductAppService>();
+            services.AddScoped<IPromotionAppService, PromotionAppService>();
+
         }
 
         public void DomainServices()
@@ -57,6 +62,9 @@ namespace Siteware.Ioc
 
             services.AddScoped<INotifierService, NotifierService>();
             services.AddScoped<INotifier, Notifier>();
+
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IPromotionService, PromotionService>();
         }
 
         public void Repositories()
@@ -64,6 +72,8 @@ namespace Siteware.Ioc
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IPromotionRepository, PromotionRepository>();
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
 
 
