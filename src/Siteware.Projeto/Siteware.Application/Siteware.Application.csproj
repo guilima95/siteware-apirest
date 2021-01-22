@@ -5,7 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Contracts\" />
+    <ProjectReference Include="..\Siteware.Domain\Siteware.Domain.csproj" />
+    <ProjectReference Include="..\Siteware.Infra\Siteware.Infra.csproj" />
   </ItemGroup>
 
 </Project>
