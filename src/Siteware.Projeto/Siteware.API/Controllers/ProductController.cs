@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Siteware.API.Controllers.Base;
 using Siteware.API.ViewModels;
@@ -9,10 +10,12 @@ using System.Threading.Tasks;
 
 namespace Siteware.API.Controllers
 {
+    [Authorize("Bearer")]
     [Route("api/product")]
     [ApiController]
     public class ProductController : MainController
     {
+
         private readonly IProductAppService appService;
         private readonly IMapper mapper;
         public ProductController(INotifier notifier, IProductAppService appService, IMapper mapper) : base(notifier)
