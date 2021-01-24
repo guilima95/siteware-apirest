@@ -15,6 +15,8 @@ namespace Siteware.Infra.SqlServer.EF
         public DbSet<Product> Product { get; set; }
         public DbSet<Promotion> Promotion { get; set; }
         public DbSet<User> User { get; set; }
+        public DbSet<Cart> Cart { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -24,6 +26,8 @@ namespace Siteware.Infra.SqlServer.EF
             modelBuilder.ApplyConfiguration(new ProductMap());
             modelBuilder.ApplyConfiguration(new PromotionMap());
             modelBuilder.ApplyConfiguration(new UserMap());
+            modelBuilder.ApplyConfiguration(new CartMap());
+
         }
     }
 }

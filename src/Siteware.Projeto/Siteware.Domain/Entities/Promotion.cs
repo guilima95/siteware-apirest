@@ -1,7 +1,9 @@
 ﻿using Siteware.Domain.Entities.Base;
+using Siteware.Domain.Validations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Siteware.Domain.Entities
 {
@@ -17,13 +19,36 @@ namespace Siteware.Domain.Entities
             Description = description;
             TypePromotion = typePromotion;
             StatusPromotion = statusPromotion;
+
+            Validate(this, new PromotionValidations());
+
+            NewPromotionItem(description, typePromotion, statusPromotion);
         }
 
-        public string Description { get; set; }
-        public TypePromotion TypePromotion { get; set; }
-        public StatusPromotion StatusPromotion { get; set; }
+        public string Description { get; private set; }
+        public TypePromotion TypePromotion { get; private set; }
+        public StatusPromotion StatusPromotion { get; private set; }
 
-        public ICollection<Product> Products { get; set; }
+        // Propriedades somente para visualização:
+        [NotMapped]
+        public string Status { get; set; }
+        [NotMapped]
+        public string Name { get; set; }
+        public ICollection<Product> Products { get; private set; }
+
+
+        private Promotion NewPromotionItem(string description, TypePromotion typePromotion, StatusPromotion statusPromotion)
+        {
+            return new Promotion
+            {
+                Description = description,
+                StatusPromotion = statusPromotion,
+                TypePromotion = typePromotion
+
+            };
+        }
+
+
 
     }
 
@@ -34,7 +59,11 @@ namespace Siteware.Domain.Entities
         ThreeForTen = 1,
 
         [Description("Buy 1 take 2")]
-        BuyOneTakeTwo = 2
+        BuyOneTakeTwo = 2,
+
+        [Description("5% discount")]
+        DiscountPercent = 3
+
     }
 
     public enum StatusPromotion : byte

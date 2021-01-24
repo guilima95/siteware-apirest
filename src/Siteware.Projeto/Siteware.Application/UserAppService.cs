@@ -32,7 +32,7 @@ namespace Siteware.Application
 
         public async Task<IEnumerable<User>> GetEnumerable(Expression<Func<User, bool>> predicate)
         {
-            return await userRepository.GetEnumerable(predicate);
+            return await userRepository.GetList(predicate);
         }
 
         public async Task Insert(User Object)

@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Siteware.API.AutoMapper;
 using Siteware.API.Filters;
 using Siteware.Infra.Jwt;
 using Siteware.Ioc;
@@ -34,6 +36,9 @@ namespace Siteware.API
         {
             // JWT
             ConfigureAuth(services);
+
+            //AUTOMAPPER
+            services.AddAutoMapper(typeof(AutoMapperConfig));
 
             // IoC
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);

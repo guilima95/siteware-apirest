@@ -14,7 +14,7 @@ namespace Siteware.Infra.Map
             builder.ToTable("Promotion");
             builder.HasKey(pro => pro.Id).HasName("Id");
             builder.Property(pro => pro.Description).HasColumnName("Description");
-            builder.Property(pro => pro.StatusPromotion).HasColumnName("TypePromotion").HasColumnType("tinyint");
+            builder.Property(pro => pro.TypePromotion).HasColumnName("TypePromotion").HasColumnType("tinyint");
             builder.Property(pro => pro.StatusPromotion).HasColumnName("StatusPromotion").HasColumnType("tinyint");
         }
     }

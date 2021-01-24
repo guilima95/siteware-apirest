@@ -10,6 +10,9 @@ namespace Siteware.Application.Contracts
 {
     public interface IProductAppService : IAppService<Product>
     {
-        Task NewProduct(RequestProductModel request);
+        Task NewProduct(ProductModel request);
+
+        Task<Product> GetByName(string name);
+
     }
 }

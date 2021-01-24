@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Siteware.API.Controllers.Base;
+using Siteware.API.ViewModels;
 using Siteware.Application.Contracts;
 using Siteware.Domain.Models;
 using Siteware.Domain.Notification.Contracts;
@@ -12,15 +14,18 @@ namespace Siteware.API.Controllers
     public class ProductController : MainController
     {
         private readonly IProductAppService appService;
-        public ProductController(INotifier notifier, IProductAppService appService) : base(notifier)
+        private readonly IMapper mapper;
+        public ProductController(INotifier notifier, IProductAppService appService, IMapper mapper) : base(notifier)
         {
             this.appService = appService;
+            this.mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(string name)
         {
-            return null;
+            var response = mapper.Map<ProductViewModel>(await appService.GetByName(name));
+            return CustomResponse(response);
         }
 
 
@@ -33,7 +38,7 @@ namespace Siteware.API.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] RequestProductModel request)
+        public async Task<IActionResult> Post([FromBody] ProductModel request)
         {
             await appService.NewProduct(request);
             return CustomResponse();

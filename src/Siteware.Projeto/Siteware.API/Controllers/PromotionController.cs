@@ -27,7 +27,7 @@ namespace Siteware.API.Controllers
         [ProducesResponseType(400, Type = typeof(ReturnError))]
         [HttpPost("new")]
 
-        public async Task<IActionResult> Post([FromBody] RequestPromotionModel request)
+        public async Task<IActionResult> Post([FromBody] PromotionModel request)
         {
             await appService.NewPromotion(request);
             return CustomResponse();

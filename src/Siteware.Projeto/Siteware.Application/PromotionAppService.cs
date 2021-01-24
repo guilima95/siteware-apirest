@@ -1,6 +1,8 @@
 ﻿using Siteware.Application.Contracts;
 using Siteware.Domain.Entities;
 using Siteware.Domain.Models;
+using Siteware.Domain.Repositories;
+using Siteware.Domain.Repositories.Transaction;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -11,6 +13,15 @@ namespace Siteware.Application
 {
     public class PromotionAppService : IPromotionAppService
     {
+        private readonly IPromotionRepository promotion;
+        private readonly IUnitOfWork unitOfWork;
+
+
+        public PromotionAppService(IPromotionRepository promotion, IUnitOfWork unitOfWork)
+        {
+            this.promotion = promotion;
+            this.unitOfWork = unitOfWork;
+        }
         public Task<Promotion> Get(Expression<Func<Promotion, bool>> predicate)
         {
             throw new NotImplementedException();
@@ -26,14 +37,18 @@ namespace Siteware.Application
             throw new NotImplementedException();
         }
 
-        public Task Insert(Promotion Object)
+        public async Task Insert(Promotion Object)
         {
-            throw new NotImplementedException();
+            await promotion.Insert(Object);
+            await unitOfWork.Commit();
+
         }
 
-        public Task NewPromotion(RequestPromotionModel request)
+        public async Task NewPromotion(PromotionModel request)
         {
-            throw new NotImplementedException();
+            var promotion = new Promotion(request.DescriptionPromotion, request.Type, request.Status);
+
+            await Insert(promotion);
         }
 
         public Task Remove(Promotion Object)

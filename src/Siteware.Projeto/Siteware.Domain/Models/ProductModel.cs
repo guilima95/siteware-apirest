@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Siteware.Domain.Models
 {
-    public class RequestProductModel
+    public class ProductModel
     {
         public string NameProduct { get; set; }
         public decimal PriceProduct { get; set; }

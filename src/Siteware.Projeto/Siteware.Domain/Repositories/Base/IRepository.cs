@@ -13,8 +13,8 @@ namespace Siteware.Domain.Repositories.Base
         Task<TEntity> GetById(int Id);
         Task<List<TEntity>> Get();
         Task<TEntity> Get(Expression<Func<TEntity, bool>> predicate);
-        Task<IEnumerable<TEntity>> GetEnumerable(Expression<Func<TEntity, bool>> predicate);
+        Task<IList<TEntity>> GetList(Expression<Func<TEntity, bool>> predicate);
 
-        IEnumerable<TEntity> GetAll();
+        IList<TEntity> GetAll();
     }
 }

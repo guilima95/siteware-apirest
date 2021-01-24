@@ -1,4 +1,5 @@
-﻿using Siteware.Domain.Models;
+﻿using Siteware.Domain.Entities;
+using Siteware.Domain.Models;
 using Siteware.Domain.Notification;
 using Siteware.Domain.Notification.Contracts;
 using Siteware.Domain.Repositories;
@@ -18,26 +19,31 @@ namespace Siteware.Domain.Services
             this.promotionRepository = promotionRepository;
         }
 
-        public async Task<ResponsePromotionProduct> GetPromotion(Entities.TypePromotion type)
+        public async Task<PromotionProductModel> GetPromotion(Entities.TypePromotion type)
         {
-            ResponsePromotionProduct response = null;
+            PromotionProductModel response = new PromotionProductModel
+            {
+                DescriptionPromotion = "",
+                PromotionId = 0
+            };
             var data = await promotionRepository.Get(x => x.TypePromotion == type).ConfigureAwait(false);
 
             if (data == null)
-                Notifier($"Promotion not found.");
+                Notifier($"Not possible insert product. Promotion {Enum.GetName(typeof(TypePromotion), type)} not found.");
 
 
             if (!HasNotification())
             {
-                response = new ResponsePromotionProduct
-                {
-                    DescriptionPromotion = data.Description,
-                    PromotionId = data.Id
-                };
+                response.DescriptionPromotion = data.Description;
+                response.PromotionId = data.Id;
             }
 
-
             return response;
+        }
+
+        public async Task<IList<Promotion>> GetPromotions(int id)
+        {
+            return await promotionRepository.GetList(x => x.Id == id);
         }
     }
 }

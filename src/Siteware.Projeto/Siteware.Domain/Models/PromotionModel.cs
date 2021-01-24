@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Siteware.Domain.Models
 {
-    public class RequestPromotionModel
+    public class PromotionModel
     {
         public TypePromotion Type { get; set; }
         public StatusPromotion Status { get; set; }

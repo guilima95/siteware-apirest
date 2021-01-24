@@ -10,6 +10,6 @@ namespace Siteware.Application.Contracts
 {
     public interface IPromotionAppService : IAppService<Promotion>
     {
-        Task NewPromotion(RequestPromotionModel request);
+        Task NewPromotion(PromotionModel request);
     }
 }

@@ -36,7 +36,7 @@ namespace Siteware.Application
 
         public async Task<IEnumerable<Product>> GetEnumerable(Expression<Func<Product, bool>> predicate)
         {
-            return await product.GetEnumerable(predicate);
+            return await product.GetList(predicate);
         }
 
         public async Task Insert(Product Object)
@@ -58,43 +58,49 @@ namespace Siteware.Application
             await unitOfWork.Commit();
         }
 
-        public async Task NewProduct(RequestProductModel request)
+        public async Task NewProduct(ProductModel request)
         {
-            // Validar request vazio ou null
+            // Validar entrada
 
             Product objProduct = null;
-            ResponsePromotionProduct objPromotion = null;
+            PromotionProductModel objPromotion = null;
 
             if (request.Promotions.Count > 0)
             {
                 foreach (var item in request.Promotions)
                 {
                     objPromotion = await servicePromotion.GetPromotion(item);
+                    objProduct = new Product(request.NameProduct, request.PriceProduct, objPromotion.PromotionId);
 
-                    if (objPromotion != null)
-                        objProduct = new Product()
-                        {
-                            Name = request.NameProduct,
-                            Price = request.PriceProduct,
-                            PromotionId = objPromotion.PromotionId
-                        };
                 }
             }
             else
             {
-                objProduct = new Product()
-                {
-                    Name = request.NameProduct,
-                    Price = request.PriceProduct
-                };
+                objProduct = new Product(request.NameProduct, request.PriceProduct);
             }
 
-            if (objProduct != null)
+            if (!objProduct.Invalid)
+                await Insert(objProduct);
+        }
+
+        public async Task<Product> GetByName(string name)
+        {
+            var productObj = await product.Get(x => x.Name == name);
+            if (productObj == null)
+                throw new NotFoundException($"Product not found: {name}");
+
+            var listPromotions = await servicePromotion.GetPromotions(productObj.PromotionId);
+
+            // Laço para incrementar name da promoção
+            foreach (var item in listPromotions)
             {
-                await product.Insert(objProduct);
-                await unitOfWork.Commit();
+                item.Name = Enum.GetName(typeof(TypePromotion), item.TypePromotion);
+                item.Status = Enum.GetName(typeof(StatusPromotion), item.StatusPromotion);
             }
 
+            productObj.Promotions = listPromotions;
+
+            return productObj;
         }
     }
 }

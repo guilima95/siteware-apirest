@@ -10,6 +10,9 @@ namespace Siteware.Domain.Services.Contracts
 {
     public interface IPromotionService
     {
-        Task<ResponsePromotionProduct> GetPromotion(TypePromotion type);
+        Task<PromotionProductModel> GetPromotion(TypePromotion type);
+        Task<IList<Promotion>> GetPromotions(int id);
+
+
     }
 }
