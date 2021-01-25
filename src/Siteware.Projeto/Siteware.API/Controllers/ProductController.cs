@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 
 namespace Siteware.API.Controllers
 {
-  //  [Authorize("Bearer")]
-  [Route("api/product")]
+    //[Authorize("Bearer")]
+    [Route("api/product")]
     [ApiController]
     public class ProductController : MainController
     {
@@ -49,16 +49,18 @@ namespace Siteware.API.Controllers
 
 
         [HttpPut]
-        public async Task<IActionResult> Put([FromBody] string name, decimal price)
+        public async Task<IActionResult> Put([FromBody] ProductModel request)
         {
-            return null;
+            await appService.UpdateProduct(request);
+            return CustomResponse();
         }
 
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        [HttpDelete]
+        public async Task<IActionResult> Delete(string name)
         {
-            return null;
+            await appService.RemoveByName(name);
+            return CustomResponse();
         }
     }
 }

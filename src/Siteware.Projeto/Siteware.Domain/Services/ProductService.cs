@@ -19,16 +19,6 @@ namespace Siteware.Domain.Services
             this.productRepository = productRepository;
         }
 
-        public async Task<bool> ValidProductByCart(string name, decimal price)
-        {
-            var product = await productRepository.Get(p => p.Name == name && p.Price == price);
-            if (product == null)
-                Notifier($"Product with name {name} and price: {price} not found.");
-
-            if (!HasNotification())
-                return product.Valid;
-            else
-                return true;
-        }
+        
     }
 }

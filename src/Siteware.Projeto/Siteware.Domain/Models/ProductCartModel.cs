@@ -12,6 +12,5 @@ namespace Siteware.Domain.Models
         public int Quantity { get; set; }
         public TypePromotion TypePromotion { get; set; }
 
-
     }
 }

@@ -16,13 +16,14 @@ namespace Siteware.Application
     public class ProductAppService : IProductAppService
     {
         private readonly IProductRepository product;
-        private readonly IPromotionService servicePromotion;
+        private readonly IPromotionRepository promotion;
+
         private readonly IUnitOfWork unitOfWork;
-        public ProductAppService(IProductRepository product, IUnitOfWork unitOfWork, IPromotionService promotionService)
+        public ProductAppService(IProductRepository product, IUnitOfWork unitOfWork, IPromotionRepository promotion)
         {
             this.product = product;
             this.unitOfWork = unitOfWork;
-            this.servicePromotion = promotionService;
+            this.promotion = promotion;
         }
         public async Task<Product> Get(Expression<Func<Product, bool>> predicate)
         {
@@ -47,6 +48,7 @@ namespace Siteware.Application
 
         public async Task Remove(Product Object)
         {
+
             await product.Remove(Object);
             await unitOfWork.Commit();
 
@@ -54,34 +56,44 @@ namespace Siteware.Application
 
         public async Task Update(Product Object)
         {
+
             await product.Update(Object);
             await unitOfWork.Commit();
         }
 
         public async Task NewProduct(ProductModel request)
         {
-            // Validar entrada
 
             Product objProduct = null;
-            PromotionProductModel objPromotion = null;
+            // Validar entrada
 
-            if (request.Promotions.Count > 0)
-            {
-                foreach (var item in request.Promotions)
-                {
-                    objPromotion = await servicePromotion.GetPromotion(item);
-                    objProduct = new Product(request.NameProduct, request.PriceProduct, objPromotion.PromotionId);
+            if (string.IsNullOrEmpty(request.NameProduct))
+                throw new ValidationException("Name the product is required.");
 
-                }
-            }
+
+            if (request.TypePromotion.HasValue && !Enum.IsDefined(typeof(TypePromotion), request.TypePromotion))
+                throw new ValidationException("Product invalid. Promotion not found.");
             else
             {
-                objProduct = new Product(request.NameProduct, request.PriceProduct);
-            }
+                if (!request.TypePromotion.HasValue)
+                    objProduct = new Product(request.NameProduct, request.PriceProduct, null);
 
-            if (!objProduct.Invalid)
-                await Insert(objProduct);
+                else
+                {
+                    var objPromotion = await promotion.Get(x => x.TypePromotion == request.TypePromotion.Value);
+                    if (objPromotion == null)
+                        throw new NotFoundException("");
+
+                    objProduct = new Product(request.NameProduct, request.PriceProduct, objPromotion.Id);
+                }
+
+                await product.Insert(objProduct);
+                await unitOfWork.Commit();
+
+            }
         }
+
+
 
         public async Task<Product> GetByName(string name)
         {
@@ -89,7 +101,7 @@ namespace Siteware.Application
             if (productObj == null)
                 throw new NotFoundException($"Product not found: {name}");
 
-            var listPromotions = await servicePromotion.GetPromotions(productObj.PromotionId);
+            var listPromotions = await promotion.GetList(promotion => promotion.Id == productObj.PromotionId);
 
             // Laço para incrementar name da promoção
             foreach (var item in listPromotions)
@@ -101,6 +113,33 @@ namespace Siteware.Application
             productObj.Promotions = listPromotions;
 
             return productObj;
+        }
+
+        public async Task UpdateProduct(ProductModel request)
+        {
+            Product objProduct = null;
+            // Validar entrada
+
+            if (string.IsNullOrEmpty(request.NameProduct))
+                throw new ValidationException("Name the product is required.");
+
+
+
+            if (request.TypePromotion.HasValue && Enum.IsDefined(typeof(TypePromotion), request.TypePromotion))
+                throw new ValidationException("Product invalid. Promotion not .");
+            else
+                objProduct = new Product(request.NameProduct, request.PriceProduct);
+
+
+            await product.Update(objProduct);
+            await unitOfWork.Commit();
+        }
+
+        public async Task RemoveByName(string name)
+        {
+            var objProduct = await GetByName(name);
+            await Remove(objProduct);
+            await unitOfWork.Commit();
         }
     }
 }

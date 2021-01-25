@@ -11,26 +11,16 @@ namespace Siteware.Domain.Services
 {
     public class CartService : NotifierService, ICartService
     {
-        private readonly IProductService productService;
 
-        public CartService(INotifier notifier, IProductService productService) : base(notifier)
+
+        public CartService(INotifier notifier) : base(notifier)
         {
 
-            this.productService = productService;
         }
 
-        public async Task<decimal> CalculatePriceTotal(ProductCartModel productCart)
+        public decimal CalculatePriceTotal(ProductCartModel productCart)
         {
-            decimal priceTotal = 0;
-            bool validProdut = await productService.ValidProductByCart(productCart.NameProduct, productCart.PriceProduct);
-
-            if (validProdut)
-                priceTotal = productCart.Quantity * productCart.PriceProduct;
-            else
-                Notifier($"Product not valid.");
-
-
-            return priceTotal;
+            return productCart.Quantity * productCart.PriceProduct;
         }
     }
 }

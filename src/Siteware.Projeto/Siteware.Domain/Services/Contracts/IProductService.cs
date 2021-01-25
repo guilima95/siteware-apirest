@@ -10,6 +10,5 @@ namespace Siteware.Domain.Services.Contracts
 {
     public interface IProductService : INotifierService
     {
-        Task<bool> ValidProductByCart(string name, decimal price);
     }
 }

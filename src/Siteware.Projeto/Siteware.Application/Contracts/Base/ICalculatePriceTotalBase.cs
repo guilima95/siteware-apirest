@@ -8,6 +8,6 @@ namespace Siteware.Application.Contracts.Base
 {
     public interface ICalculatePriceTotalBase
     {
-        Task<decimal> CalculatePriceTotal(ProductCartModel productCart);
+       decimal CalculatePriceTotal(ProductCartModel productCart);
     }
 }

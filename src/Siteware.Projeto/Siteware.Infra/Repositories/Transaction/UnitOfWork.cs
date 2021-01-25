@@ -19,7 +19,7 @@ namespace Siteware.Infra.Repositories.Transaction
         }
         public void BeginTransaction()
         {
-            _context.Database.BeginTransaction();
+            var transaction = _context.Database.CurrentTransaction ?? _context.Database.BeginTransaction();
         }
 
         public async Task<bool> Commit()
@@ -43,7 +43,7 @@ namespace Siteware.Infra.Repositories.Transaction
         }
 
 
-        public void Rollback()
+        public void RollbackTransaction()
         {
             _context.Database.RollbackTransaction();
         }

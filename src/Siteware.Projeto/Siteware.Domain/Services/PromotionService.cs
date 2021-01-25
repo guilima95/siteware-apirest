@@ -19,22 +19,21 @@ namespace Siteware.Domain.Services
             this.promotionRepository = promotionRepository;
         }
 
-        public async Task<PromotionProductModel> GetPromotion(Entities.TypePromotion type)
+        public async Task<PromotionProductModel> GetPromotion(int type)
         {
             PromotionProductModel response = new PromotionProductModel
             {
                 DescriptionPromotion = "",
-                PromotionId = 0, 
-                StatusPromotion = StatusPromotion.Desable, 
+                PromotionId = 0,
+                StatusPromotion = StatusPromotion.Desable,
                 TypePromotion = TypePromotion.Undefined
             };
-            var data = await promotionRepository.Get(x => x.TypePromotion == type).ConfigureAwait(false);
+
+            var data = await promotionRepository.Get(x => (int)x.TypePromotion == type);
 
             if (data == null)
                 Notifier($"Not possible insert product. Promotion {Enum.GetName(typeof(TypePromotion), type)} not found.");
-
-
-            if (!HasNotification())
+            else
             {
                 response.DescriptionPromotion = data.Description;
                 response.PromotionId = data.Id;
@@ -45,9 +44,5 @@ namespace Siteware.Domain.Services
             return response;
         }
 
-        public async Task<IList<Promotion>> GetPromotions(int id)
-        {
-            return await promotionRepository.GetList(x => x.Id == id);
-        }
     }
 }

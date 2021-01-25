@@ -11,5 +11,7 @@ namespace Siteware.Application.Contracts
     public interface IPromotionAppService : IAppService<Promotion>
     {
         Task NewPromotion(PromotionModel request);
+
+        Task<IList<Promotion>> GetAll();
     }
 }

@@ -7,5 +7,7 @@ namespace Siteware.Domain.Repositories.Transaction
     {
      
         Task<bool> Commit();
+
+        void RollbackTransaction();
     }
 }

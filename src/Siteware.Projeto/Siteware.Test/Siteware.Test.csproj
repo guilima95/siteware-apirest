@@ -21,11 +21,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Siteware.Application\Siteware.Application.csproj" />
     <ProjectReference Include="..\Siteware.Domain\Siteware.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Domain\" />
+    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>

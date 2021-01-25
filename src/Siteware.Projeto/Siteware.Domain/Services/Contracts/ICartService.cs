@@ -9,6 +9,6 @@ namespace Siteware.Domain.Services.Contracts
 {
     public interface ICartService : INotifierService
     {
-        Task<decimal> CalculatePriceTotal(ProductCartModel productCart);
+        decimal CalculatePriceTotal(ProductCartModel productCart);
     }
 }

@@ -11,8 +11,8 @@ namespace Siteware.Application.Contracts
     public interface IProductAppService : IAppService<Product>
     {
         Task NewProduct(ProductModel request);
-
         Task<Product> GetByName(string name);
-
+        Task UpdateProduct(ProductModel request);
+        Task RemoveByName(string name);
     }
 }

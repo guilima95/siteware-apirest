@@ -13,11 +13,11 @@ namespace Siteware.Infra.Repositories.Base
 {
     public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
-        private readonly SitewareDbContext context;
+        private readonly SitewareDbContext sitewareDbContext;
         private readonly DbSet<TEntity> DbSet;
         public Repository(SitewareDbContext context)
         {
-            this.context = context;
+            this.sitewareDbContext = context;
             this.DbSet = context.Set<TEntity>();
         }
 
@@ -25,7 +25,7 @@ namespace Siteware.Infra.Repositories.Base
 
         public async Task Insert(TEntity Entity)
         {
-            await context.Set<TEntity>().AddAsync(Entity);
+            await sitewareDbContext.Set<TEntity>().AddAsync(Entity);
         }
 
         public async Task Update(TEntity Entity)
@@ -60,7 +60,7 @@ namespace Siteware.Infra.Repositories.Base
 
         public IList<TEntity> GetAll()
         {
-            return context.Set<TEntity>().ToList();
+            return sitewareDbContext.Set<TEntity>().ToList();
         }
     }
 }

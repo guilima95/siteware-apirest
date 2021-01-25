@@ -3,6 +3,7 @@ using Siteware.Domain.Entities;
 using Siteware.Domain.Models;
 using Siteware.Domain.Repositories;
 using Siteware.Domain.Repositories.Transaction;
+using Siteware.Infra.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -13,18 +14,26 @@ namespace Siteware.Application
 {
     public class PromotionAppService : IPromotionAppService
     {
-        private readonly IPromotionRepository promotion;
+        private readonly IPromotionRepository promotionRepository;
+        private readonly IProductRepository productRepository;
+
         private readonly IUnitOfWork unitOfWork;
 
 
-        public PromotionAppService(IPromotionRepository promotion, IUnitOfWork unitOfWork)
+        public PromotionAppService(IPromotionRepository promotionRepository, IProductRepository productRepository, IUnitOfWork unitOfWork)
         {
-            this.promotion = promotion;
+            this.promotionRepository = promotionRepository;
+            this.productRepository = productRepository;
             this.unitOfWork = unitOfWork;
         }
         public Task<Promotion> Get(Expression<Func<Promotion, bool>> predicate)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<IList<Promotion>> GetAll()
+        {
+            return await Task.Run(() => promotionRepository.GetAll());
         }
 
         public Task<Promotion> GetById(int id)
@@ -39,26 +48,31 @@ namespace Siteware.Application
 
         public async Task Insert(Promotion Object)
         {
-            await promotion.Insert(Object);
+            await promotionRepository.Insert(Object);
             await unitOfWork.Commit();
 
         }
 
         public async Task NewPromotion(PromotionModel request)
         {
-            var promotion = new Promotion(request.DescriptionPromotion, request.Type, request.Status);
+            var duplicate = await promotionRepository.Get(x => x.TypePromotion == request.Type);
+            if (duplicate != null)
+                throw new ValidationException($"already exists type promotion.");
 
-            await Insert(promotion);
+            var promotionObj = new Promotion(request.DescriptionPromotion, request.Type, request.Status);
+            await Insert(promotionObj);
         }
 
-        public Task Remove(Promotion Object)
+        public async Task Remove(Promotion Object)
         {
-            throw new NotImplementedException();
+            await promotionRepository.Remove(Object);
+            await unitOfWork.Commit();
         }
 
-        public Task Update(Promotion Object)
+        public async Task Update(Promotion Object)
         {
-            throw new NotImplementedException();
+            await promotionRepository.Update(Object);
+            await unitOfWork.Commit();
         }
     }
 }

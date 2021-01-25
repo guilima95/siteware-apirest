@@ -13,12 +13,6 @@ namespace Siteware.Domain.Validations
             RuleFor(x => x.Name)
                 .NotEmpty()
                 .WithName("Fill in name the product.");
-            RuleFor(x => x.PromotionId)
-                .NotEqual((int)TypePromotion.BuyOneTakeTwo)
-                .NotEqual((int)TypePromotion.DiscountPercent)
-                .NotEqual((int)TypePromotion.ThreeForTen)
-                .NotEqual(0)
-                .WithName("Promotion not found.");
         }
     }
 }

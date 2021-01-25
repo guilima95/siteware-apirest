@@ -17,7 +17,7 @@ namespace Siteware.Application
 
         }
 
-        public virtual Task<decimal> CalculatePriceTotal(ProductCartModel productCart)
+        public virtual decimal CalculatePriceTotal(ProductCartModel productCart)
         {
             throw new NotImplementedException();
         }

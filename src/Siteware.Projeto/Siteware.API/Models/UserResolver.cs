@@ -8,6 +8,6 @@ namespace Siteware.API.Models
     public class UserResolver
     {
         public string Username { get; set; }
-        public string Role { get; set; }
+        //public string Role { get; set; }
     }
 }

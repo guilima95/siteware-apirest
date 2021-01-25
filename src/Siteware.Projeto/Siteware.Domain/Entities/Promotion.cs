@@ -3,6 +3,7 @@ using Siteware.Domain.Validations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Siteware.Domain.Entities
@@ -16,6 +17,7 @@ namespace Siteware.Domain.Entities
 
         public Promotion(string description, TypePromotion typePromotion, StatusPromotion statusPromotion)
         {
+
             Description = description;
             TypePromotion = typePromotion;
             StatusPromotion = statusPromotion;
@@ -24,6 +26,7 @@ namespace Siteware.Domain.Entities
 
             NewPromotionItem(description, typePromotion, statusPromotion);
         }
+
 
         public string Description { get; private set; }
         public TypePromotion TypePromotion { get; private set; }
@@ -34,7 +37,7 @@ namespace Siteware.Domain.Entities
         public string Status { get; set; }
         [NotMapped]
         public string Name { get; set; }
-        public ICollection<Product> Products { get; private set; }
+        public virtual Product Product { get; set; }
 
 
         private Promotion NewPromotionItem(string description, TypePromotion typePromotion, StatusPromotion statusPromotion)
@@ -43,7 +46,7 @@ namespace Siteware.Domain.Entities
             {
                 Description = description,
                 StatusPromotion = statusPromotion,
-                TypePromotion = typePromotion, 
+                TypePromotion = typePromotion
 
             };
         }
