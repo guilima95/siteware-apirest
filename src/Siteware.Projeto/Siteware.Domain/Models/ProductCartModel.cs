@@ -5,13 +5,13 @@ using System.Text;
 
 namespace Siteware.Domain.Models
 {
-    public class PromotionProductModel
+    public class ProductCartModel
     {
-        public int PromotionId { get; set; }
-        public string DescriptionPromotion { get; set; }
-
+        public string NameProduct { get; set; }
+        public decimal PriceProduct { get; set; }
+        public int Quantity { get; set; }
         public TypePromotion TypePromotion { get; set; }
 
-        public StatusPromotion StatusPromotion { get; set; }
+
     }
 }

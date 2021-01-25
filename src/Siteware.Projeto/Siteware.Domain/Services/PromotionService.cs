@@ -24,7 +24,9 @@ namespace Siteware.Domain.Services
             PromotionProductModel response = new PromotionProductModel
             {
                 DescriptionPromotion = "",
-                PromotionId = 0
+                PromotionId = 0, 
+                StatusPromotion = StatusPromotion.Desable, 
+                TypePromotion = TypePromotion.Undefined
             };
             var data = await promotionRepository.Get(x => x.TypePromotion == type).ConfigureAwait(false);
 
@@ -36,6 +38,8 @@ namespace Siteware.Domain.Services
             {
                 response.DescriptionPromotion = data.Description;
                 response.PromotionId = data.Id;
+                response.StatusPromotion = data.StatusPromotion == StatusPromotion.Active ? data.StatusPromotion : StatusPromotion.Desable;
+                response.TypePromotion = data.TypePromotion;
             }
 
             return response;

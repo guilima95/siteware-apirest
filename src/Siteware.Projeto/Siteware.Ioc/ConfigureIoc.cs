@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Siteware.Application;
 using Siteware.Application.Contracts;
+using Siteware.Application.Contracts.Base;
 using Siteware.Domain.Concrete.Notification;
 using Siteware.Domain.Notification;
 using Siteware.Domain.Notification.Contracts;
@@ -49,6 +50,11 @@ namespace Siteware.Ioc
             services.AddScoped<IUserAppService, UserAppService>();
             services.AddScoped<IProductAppService, ProductAppService>();
             services.AddScoped<IPromotionAppService, PromotionAppService>();
+            services.AddScoped<ICartAppService, CartAppService>();
+
+            services.AddScoped<ICalculatePriceTotalBase, CalculatePriceTotalBase>();
+
+
 
         }
 
@@ -65,6 +71,8 @@ namespace Siteware.Ioc
 
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IPromotionService, PromotionService>();
+            services.AddScoped<ICartService, CartService>();
+
         }
 
         public void Repositories()
@@ -72,6 +80,8 @@ namespace Siteware.Ioc
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IPromotionRepository, PromotionRepository>();
+            services.AddScoped<ICartRepository, CartRepository>();
+
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }

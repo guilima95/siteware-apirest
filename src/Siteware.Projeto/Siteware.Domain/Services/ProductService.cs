@@ -19,24 +19,16 @@ namespace Siteware.Domain.Services
             this.productRepository = productRepository;
         }
 
-        public async Task<decimal> CalculatePriceTotal(List<CalculateProductModel> productModels)
+        public async Task<bool> ValidProductByCart(string name, decimal price)
         {
-            decimal priceTotal = 0.0M;
-            var produtcs = new List<CalculateProductModel>();
+            var product = await productRepository.Get(p => p.Name == name && p.Price == price);
+            if (product == null)
+                Notifier($"Product with name {name} and price: {price} not found.");
 
-            foreach (var item in productModels)
-            {
-                // Verifica se o produto existe:
-                var product = await productRepository.Get(x => x.Name == item.NameProduct);
-                if (product == null)
-                    Notifier($"Product Not found: [{item.NameProduct}]");
-
-                priceTotal = item.PriceProduct++;
-            }
-
-            return priceTotal;
+            if (!HasNotification())
+                return product.Valid;
+            else
+                return true;
         }
-
-        
     }
 }

@@ -32,7 +32,7 @@ namespace Siteware.Infra.Repositories.Transaction
             catch (Exception ex)
             {
                 _context.Database.RollbackTransaction();
-                throw new ValidationDomainException($"Error: {ex.InnerException.Message}");
+                throw new ValidationException($"Error: {ex.InnerException.Message}");
             }
 
         }

@@ -27,7 +27,7 @@ namespace Siteware.Domain.Entities
 
         public string Description { get; private set; }
         public TypePromotion TypePromotion { get; private set; }
-        public StatusPromotion StatusPromotion { get; private set; }
+        public StatusPromotion StatusPromotion { get; set; }
 
         // Propriedades somente para visualização:
         [NotMapped]
@@ -43,7 +43,7 @@ namespace Siteware.Domain.Entities
             {
                 Description = description,
                 StatusPromotion = statusPromotion,
-                TypePromotion = typePromotion
+                TypePromotion = typePromotion, 
 
             };
         }
@@ -55,6 +55,9 @@ namespace Siteware.Domain.Entities
 
     public enum TypePromotion : byte
     {
+        [Description("Undefined")]
+        Undefined = 0,
+
         [Description("3 for 10")]
         ThreeForTen = 1,
 
