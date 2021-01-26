@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Siteware.API.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/cart")]
     [ApiController]
     public class CartController : MainController
