@@ -13,5 +13,6 @@ namespace Siteware.Domain.Repositories
         Task<List<CartModel>> GetCartProducts();
 
         Task RemoveByProductId(int id);
+
     }
 }

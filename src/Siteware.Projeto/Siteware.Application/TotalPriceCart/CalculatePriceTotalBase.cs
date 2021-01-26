@@ -19,7 +19,7 @@ namespace Siteware.Application
 
         public virtual decimal CalculatePriceTotal(ProductCartModel productCart)
         {
-            throw new NotImplementedException();
+            return productCart.PriceProduct * productCart.Quantity;
         }
     }
 }

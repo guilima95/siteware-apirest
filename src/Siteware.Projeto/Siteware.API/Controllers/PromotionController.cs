@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Siteware.API.Controllers
 {
-    //[Authorize("Bearer")]
+    [Authorize]
     [Route("api/promotion")]
     [ApiController]
     public class PromotionController : MainController

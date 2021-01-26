@@ -9,6 +9,6 @@ namespace Siteware.Domain.Models
         public string NameProduct { get; set; }
         public int QuantityProduct { get; set; }
         public decimal PriceTotal { get; set; }
-        public string DescriptionPromotion { get; set; }
-    }
+        public string Promotion { get; set; }
+}
 }

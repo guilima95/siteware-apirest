@@ -65,33 +65,34 @@ namespace Siteware.Application
         {
 
             Product objProduct = null;
-            // Validar entrada
+            // Valida entrada
 
             if (string.IsNullOrEmpty(request.NameProduct))
                 throw new ValidationException("Name the product is required.");
 
+            if (!request.TypePromotion.HasValue)
+                objProduct = new Product(request.NameProduct, request.PriceProduct);
 
-            if (request.TypePromotion.HasValue && !Enum.IsDefined(typeof(TypePromotion), request.TypePromotion))
-                throw new ValidationException("Product invalid. Promotion not found.");
+            // Valida promotion
             else
             {
-                if (!request.TypePromotion.HasValue)
-                    objProduct = new Product(request.NameProduct, request.PriceProduct, null);
+                if (request.TypePromotion.HasValue && !Enum.IsDefined(typeof(TypePromotion), request.TypePromotion))
+                    throw new ValidationException("Product invalid. Promotion not found.");
 
-                else
-                {
-                    var objPromotion = await promotion.Get(x => x.TypePromotion == request.TypePromotion.Value);
-                    if (objPromotion == null)
-                        throw new NotFoundException("");
+                var objPromotion = await promotion.Get(x => x.TypePromotion == request.TypePromotion.Value);
+                if (objPromotion == null)
+                    throw new NotFoundException("");
 
-                    objProduct = new Product(request.NameProduct, request.PriceProduct, objPromotion.Id);
-                }
-
-                await product.Insert(objProduct);
-                await unitOfWork.Commit();
+                objProduct = new Product(request.NameProduct, request.PriceProduct, objPromotion.Id);
 
             }
+           
+
+            await product.Insert(objProduct);
+            await unitOfWork.Commit();
+
         }
+
 
 
 

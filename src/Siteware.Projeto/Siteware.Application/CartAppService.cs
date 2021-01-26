@@ -45,11 +45,13 @@ namespace Siteware.Application
                 throw new NotFoundException($"Produt not found: {productCart.NameProduct}");
 
 
-            var item = await promotionRepository.Get(x => x.TypePromotion == productCart.TypePromotion);
+            var item = await promotionRepository.Get(x => x.Id == product.PromotionId);
 
-            if ((item == null) || (item.TypePromotion != productCart.TypePromotion || item.StatusPromotion != StatusPromotion.Active))
-                throw new ValidationException($"Promotion not is valid for product current");
-
+            if (productCart.TypePromotion.HasValue)
+            {
+                if ((item == null) || (item.TypePromotion != productCart.TypePromotion || item.StatusPromotion != StatusPromotion.Active))
+                    throw new ValidationException($"Promotion not is valid for product current");
+            }
 
             // swith para ações devido aos tipos de promoções, usando decoretor pattern para calcular o valor total (mesmo objeto tendo ações diferentes).
             totalPrice = CalculateProductsWithPromotions(productCart);
@@ -69,7 +71,8 @@ namespace Siteware.Application
             switch (productCart.TypePromotion)
             {
                 case TypePromotion.Undefined:
-                    throw new ValidationException("Promotion undefined.");
+                    totalPrice = new CalculatePriceTotalBase().CalculatePriceTotal(productCart);
+                    break;
                 case TypePromotion.ThreeForTen:
                     totalPrice = new CalculateThereForTen().CalculatePriceTotal(productCart);
                     break;
@@ -124,7 +127,7 @@ namespace Siteware.Application
 
             foreach (var item in productCart)
             {
-                priceTotal = +item.PriceTotal;
+                priceTotal = priceTotal += item.PriceTotal;
             }
 
             return new CartTotalModel
@@ -137,11 +140,12 @@ namespace Siteware.Application
 
         public async Task RemoveProduct(string name)
         {
-            var product = produtRepository.Get(p => p.Name == name);
+            var product = await produtRepository.Get(p => p.Name == name);
             if (product == null)
                 throw new NotFoundException($"Not possible remove. Product not found: {name}");
 
             await cartRepository.RemoveByProductId(product.Id);
+            await unitOfWork.Commit();
         }
 
         public async Task UpdateCart(int quantity, string name)
@@ -168,7 +172,10 @@ namespace Siteware.Application
             totalPrice = CalculateProductsWithPromotions(productCart);
 
             // persiste o produto no carrinho
-            var cart = new Cart(productCart.Quantity, productCart.PriceProduct, totalPrice, product.Id, product.Name);
+            var cart = await cartRepository.GetById(product.Id);
+
+            cart.Quantity = productCart.Quantity;
+            cart.TotalPrice = totalPrice;
 
 
             await cartRepository.Update(cart);

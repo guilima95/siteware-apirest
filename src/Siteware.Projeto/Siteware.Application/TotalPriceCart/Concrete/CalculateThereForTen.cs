@@ -16,10 +16,10 @@ namespace Siteware.Application.TotalPriceCart
             decimal totalPrice = 0;
 
 
-            if (productCart.Quantity < 3 || (productCart.Quantity > 3 && productCart.Quantity % 2 == 0))
+            if (productCart.Quantity < 3 || (productCart.Quantity > 3 && productCart.Quantity % 2 != 0))
                 totalPrice = productCart.Quantity * productCart.PriceProduct;
 
-            else if (productCart.TypePromotion == Domain.Entities.TypePromotion.ThreeForTen && productCart.Quantity % 2 != 0)
+            else if (productCart.TypePromotion == Domain.Entities.TypePromotion.ThreeForTen && (productCart.Quantity % 2 == 0 || productCart.Quantity == 3))
                 totalPrice = (productCart.Quantity / 3) * productCart.PriceProduct;
 
 

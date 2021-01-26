@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Siteware.API.Controllers
 {
-    //[Authorize("Bearer")]
+    //[Authorize]
     [Route("api/product")]
     [ApiController]
     public class ProductController : MainController

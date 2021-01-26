@@ -20,22 +20,24 @@ namespace Siteware.Infra.Repositories
             this.sitewareDbContext = sitewareDbContext;
         }
 
+
+
         public async Task<List<CartModel>> GetCartProducts()
         {
-            var listProduct = await sitewareDbContext.Product.Join(
-                sitewareDbContext.Cart,
-                product => product.Id,
-                cart => cart.ProductId,
-                (product, cart) => new { product, cart }).Join(sitewareDbContext.Promotion,
-                p => p.product.PromotionId,
-                m => m.Id,
-                (m, p) => new CartModel
-                {
-                    DescriptionPromotion = p.Description,
-                    NameProduct = m.product.Name,
-                    PriceTotal = m.cart.TotalPrice,
-                    QuantityProduct = m.cart.Quantity
-                }).ToListAsync();
+
+
+            var listProduct = await (from c in sitewareDbContext.Cart
+                                     join p in sitewareDbContext.Product on c.ProductId equals p.Id
+                                     join pm in sitewareDbContext.Promotion on p.PromotionId equals pm.Id into juncao 
+                                     from j in juncao.DefaultIfEmpty() 
+                                     select new CartModel
+                                     {
+                                         NameProduct = p.Name,
+                                         PriceTotal = c.TotalPrice, 
+                                         Promotion = j.Description,
+                                         QuantityProduct = c.Quantity
+
+                                     }).ToListAsync();
 
 
             return listProduct;
@@ -48,5 +50,6 @@ namespace Siteware.Infra.Repositories
 
             sitewareDbContext.Remove(cartProduct);
         }
+
     }
 }

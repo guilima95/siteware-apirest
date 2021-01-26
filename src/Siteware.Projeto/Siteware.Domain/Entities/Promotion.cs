@@ -15,6 +15,16 @@ namespace Siteware.Domain.Entities
 
         }
 
+        public Promotion(string description, StatusPromotion statusPromotion)
+        {
+            Description = description;
+            StatusPromotion = statusPromotion;
+
+            Validate(this, new PromotionValidations());
+
+            NewPromotionItem(description, statusPromotion);
+        }
+
         public Promotion(string description, TypePromotion typePromotion, StatusPromotion statusPromotion)
         {
 
@@ -29,8 +39,9 @@ namespace Siteware.Domain.Entities
 
 
         public string Description { get; private set; }
-        public TypePromotion TypePromotion { get; private set; }
+    
         public StatusPromotion StatusPromotion { get; set; }
+        public TypePromotion TypePromotion { get; private set; }
 
         // Propriedades somente para visualização:
         [NotMapped]
@@ -50,6 +61,18 @@ namespace Siteware.Domain.Entities
 
             };
         }
+
+        private Promotion NewPromotionItem(string description, StatusPromotion statusPromotion)
+        {
+            return new Promotion
+            {
+                Description = description,
+                StatusPromotion = statusPromotion
+             
+
+            };
+        }
+
 
 
 

@@ -23,8 +23,6 @@ namespace Siteware.Application.TotalPriceCart.Concrete
         {
             decimal totalPrice = 0;
 
-
-
             if (productCart.Quantity % 2 != 0)
                 totalPrice = (productCart.PriceProduct * productCart.Quantity);
 

@@ -10,7 +10,7 @@ namespace Siteware.Domain.Entities
         public string Name { get; private set; }
         public decimal Price { get; private set; }
         [ForeignKey("PromotionId")]
-        public int PromotionId { get; set; }
+        public int? PromotionId { get; set; }
 
         [NotMapped]
         public IList<Promotion> Promotions { get; set; }
@@ -32,6 +32,12 @@ namespace Siteware.Domain.Entities
             NewProductItem(name, price, promotionId);
         }
 
+        public Product(string name, decimal price)
+        {
+            Name = name;
+            Price = price;
+            NewProductItem(name, price);
+        }
 
         Product NewProductItem(string name, decimal price, int? promotionId = null)
         {
@@ -39,7 +45,17 @@ namespace Siteware.Domain.Entities
             {
                 Name = name,
                 Price = price,
-                PromotionId = promotionId.Value
+                PromotionId = PromotionId == 0 ? null : PromotionId
+            };
+        }
+
+        Product NewProductItem(string name, decimal price)
+        {
+            return new Product
+            {
+                Name = name,
+                Price = price,
+                PromotionId = PromotionId == 0 ? null : PromotionId                
             };
         }
     }

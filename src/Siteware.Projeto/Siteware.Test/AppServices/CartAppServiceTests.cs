@@ -56,7 +56,37 @@ namespace Siteware.Test.AppServices
             };
 
             //Act promotion
-            mockPromotionRepository.Get(Arg.Any<Expression<Func<Promotion, bool>>>()).Returns(new Promotion("Promoção compre 3 produtos por 10 reais", model.TypePromotion, StatusPromotion.Active));
+            mockPromotionRepository.Get(Arg.Any<Expression<Func<Promotion, bool>>>()).Returns(new Promotion("Promoção compre 3 produtos por 10 reais", model.TypePromotion.Value, StatusPromotion.Active));
+
+
+            //Act product
+            mockProductRepository.Get(Arg.Any<Expression<Func<Product, bool>>>()).Returns(new Product(model.NameProduct, model.PriceProduct, 23));
+
+            var addProdut = mockAppService.AddProduct(model);
+
+
+            //Assert
+            Assert.NotNull(addProdut);
+            mockCartRepository.Received(1).Insert(Arg.Any<Cart>());
+            UnitOfWorkValidation.ValidarUnitOfWorkSucesso(unitOfWork);
+
+        }
+
+        [Fact]
+        public void AddProduct_Valid_0_Promotion()
+        {
+
+            //Arrange
+            ProductCartModel model = new ProductCartModel
+            {
+                NameProduct = "Mouse",
+                PriceProduct = 10.00M,
+                Quantity = 2,
+                TypePromotion = null,
+            };
+
+            //Act promotion
+            mockPromotionRepository.Get(Arg.Any<Expression<Func<Promotion, bool>>>()).Returns(new Promotion("Promoção compre 3 produtos por 10 reais", StatusPromotion.Active));
 
 
             //Act product
@@ -88,7 +118,7 @@ namespace Siteware.Test.AppServices
             };
 
             //Act product
-            mockProductRepository.Get(Arg.Any<Expression<Func<Product, bool>>>()).Returns(new Product(model.NameProduct, model.PriceProduct));
+            mockProductRepository.Get(Arg.Any<Expression<Func<Product, bool>>>()).Returns(new Product(model.NameProduct, model.PriceProduct, idPromotionProduct));
 
             //Act promotion
             mockPromotionRepository.Get(Arg.Any<Expression<Func<Promotion, bool>>>()).Returns(new Promotion());

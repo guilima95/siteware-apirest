@@ -10,7 +10,7 @@ namespace Siteware.Domain.Models
         public string NameProduct { get; set; }
         public decimal PriceProduct { get; set; }
         public int Quantity { get; set; }
-        public TypePromotion TypePromotion { get; set; }
+        public TypePromotion? TypePromotion { get; set; }
 
     }
 }
