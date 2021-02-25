@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="3.1.11" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MyFinance.Application\MyFinance.Application.csproj" />
+    <ProjectReference Include="..\MyFinance.Domain\MyFinance.Domain.csproj" />
+    <ProjectReference Include="..\MyFinance.Infra\MyFinance.Infra.csproj" />
+  </ItemGroup>
+
+</Project>
